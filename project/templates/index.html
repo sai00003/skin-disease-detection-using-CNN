@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Disease Classifier</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: url('{{ url_for('static', filename='front.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-section {
+            flex: 1;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .info-section h2 {
+            color: #4a90e2;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .info-section ul {
+            list-style: disc;
+            margin-left: 20px;
+        }
+
+        .info-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .model-info {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .model-info h3 {
+            color: #4a90e2;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .model-info p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-section h1 {
+            color: #4a90e2;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            border: 2px solid #4a90e2;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            width: 100%;
+        }
+
+        input[type="submit"] {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #4a90e2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #357abd;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            max-width: 80%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .info-section, .form-section {
+                padding: 20px;
+            }
+
+            input[type="submit"] {
+                padding: 12px 24px;
+                font-size: 16px;
+            }
+
+            .info-section h2, .form-section h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="info-section">
+            <h2>Skin Disease Information</h2>
+            <p>Skin diseases can vary greatly in appearance and severity. Some common types include:</p>
+            <ul>
+                <li><strong>Melanocytic Nevi</strong>: Common moles that are usually harmless.</li>
+                <li><strong>Melanoma</strong>: A serious form of skin cancer that can spread to other parts of the body.</li>
+                <li><strong>Benign Keratosis-like Lesions</strong>: Non-cancerous growths that look like warts or patches.</li>
+                <li><strong>Basal Cell Carcinoma</strong>: The most common type of skin cancer, usually caused by sun exposure.</li>
+                <li><strong>Actinic Keratoses</strong>: Rough, scaly patches that can develop into skin cancer.</li>
+                <li><strong>Vascular Lesions</strong>: Abnormal blood vessel growths, including spider veins and port-wine stains.</li>
+                <li><strong>Dermatofibroma</strong>: Benign tumors of the skin that are usually firm and elevated.</li>
+            </ul>
+
+            <div class="model-info">
+                <h3>About the Model</h3>
+                <p>This skin disease classifier is powered by a deep learning model built using ResNet50 architecture. It was trained on a diverse dataset of skin images to recognize various types of skin diseases with high accuracy. The model processes uploaded images, predicts the skin condition, and provides a classification result to help in identifying potential skin issues.</p>
+            </div>
+        </div>
+        <div class="form-section">
+            <h1>Skin Disease Classifier</h1>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <input type="submit" value="Classify">
+            </form>
+
+            {% if result %}
+                <div class="result-container">
+                    <h2>Predicted Disease: {{ result }}</h2>
+                    <img src="{{ image }}" alt="Uploaded Image">
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
